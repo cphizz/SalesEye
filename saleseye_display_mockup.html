@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalesEye</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#f5f0e8;--warm:#faf8f4;--dark:#1a1814;--brown:#3d2e1e;
+  --gold:#c4933f;--gold-l:#e8c47a;--sage:#7a9e7e;--muted:#8a7d6e;
+  --border:#e0d8cc;--white:#ffffff;
+  --lens-bg:rgba(10,18,32,0.97);--lens-blue:#60c8ff;
+}
+body{background:var(--warm);color:var(--dark);font-family:'DM Sans',sans-serif;min-height:100vh}
+.hero{background:var(--dark);padding:64px 40px 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(196,147,63,0.14) 0%,transparent 65%);pointer-events:none}
+.eyebrow{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:0;animation:fu 0.7s ease forwards 0.2s}
+.htitle{font-family:'DM Serif Display',serif;font-size:clamp(36px,7vw,68px);color:var(--cream);line-height:1.05;margin-bottom:16px;opacity:0;animation:fu 0.7s ease forwards 0.4s}
+.htitle em{font-style:italic;color:var(--gold-l)}
+.hsub{font-size:15px;color:rgba(245,240,232,0.5);font-weight:300;max-width:440px;margin:0 auto 36px;line-height:1.65;opacity:0;animation:fu 0.7s ease forwards 0.6s}
+.live{display:inline-flex;align-items:center;gap:8px;background:rgba(122,158,126,0.13);border:1px solid rgba(122,158,126,0.28);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:500;color:var(--sage);letter-spacing:1px;opacity:0;animation:fu 0.7s ease forwards 0.8s}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--sage);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.tabs{background:var(--cream);border-bottom:1px solid var(--border);padding:0 32px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;justify-content:center}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;padding:15px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;white-space:nowrap;transition:color 0.2s}
+.tab:hover{color:var(--brown)}
+.tab.on{color:var(--dark);font-weight:500;border-bottom-color:var(--gold)}
+
+.content{max-width:1040px;margin:0 auto;padding:52px 28px 80px}
+.grid{display:grid;grid-template-columns:1.1fr 1fr;gap:52px;align-items:start}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.tabs{justify-content:flex-start}}
+
+.gcol{display:flex;flex-direction:column;gap:18px}
+.glabel{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.gscene{position:relative;background:#ede9e0;border-radius:20px;padding:38px 28px 32px;border:1px solid var(--border);box-shadow:0 4px 36px rgba(0,0,0,0.06)}
+.gscene::before{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(ellipse at 20% 80%,rgba(122,158,126,0.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(196,147,63,0.05) 0%,transparent 50%);pointer-events:none}
+.gwrap{position:relative;width:100%}
+.gsvg{width:100%;filter:drop-shadow(0 8px 22px rgba(0,0,0,0.16))}
+
+.lovl{position:absolute;top:15%;left:17%;width:29%;height:54%;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:7px 9px;background:var(--lens-bg)}
+.linner{opacity:0;transform:translateY(3px);transition:all 0.5s cubic-bezier(0.22,1,0.36,1)}
+.linner.on{opacity:1;transform:translateY(0)}
+.ltag{font-family:'Space Grotesk',sans-serif;font-size:7px;font-weight:500;letter-spacing:2px;color:var(--lens-blue);text-transform:uppercase;margin-bottom:5px}
+.lopt{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:500;line-height:1.35;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lopt.a{color:#fff}.lopt.b{color:rgba(255,255,255,0.62)}.lopt.c{color:rgba(255,255,255,0.38)}
+.lpci{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity 0.5s}
+.lpci.on{display:flex;opacity:1}
+.pci-i{font-size:13px;margin-bottom:3px}
+.pci-t{font-family:'Space Grotesk',sans-serif;font-size:6.5px;font-weight:600;letter-spacing:1.5px;color:#ff7755;text-transform:uppercase;line-height:1.5;text-align:center}
+.lglow{position:absolute;top:15%;left:17%;width:29%;height:54%;border-radius:8px;pointer-events:none;opacity:0;transition:opacity 0.6s,background 0.4s}
+.lglow.on{opacity:1;background:radial-gradient(ellipse at center,rgba(96,200,255,0.16) 0%,transparent 75%);animation:sp 3s ease-in-out infinite}
+.lglow.pci{background:radial-gradient(ellipse at center,rgba(255,100,60,0.18) 0%,transparent 75%)}
+@keyframes sp{0%,100%{opacity:0.65}50%{opacity:1}}
+
+.wnote{display:flex;align-items:center;gap:10px;padding:12px 15px;background:var(--white);border-radius:10px;border:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.45}
+.wi{font-size:17px;flex-shrink:0}
+
+.rcol{display:flex;flex-direction:column;gap:22px}
+.shdr{padding-bottom:18px;border-bottom:1px solid var(--border);opacity:0;transform:translateY(6px);transition:all 0.4s ease}
+.shdr.on{opacity:1;transform:translateY(0)}
+.seyebrow{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.stitle{font-family:'DM Serif Display',serif;font-size:24px;color:var(--dark);line-height:1.2}
+.sdesc{margin-top:7px;font-size:13px;color:var(--muted);line-height:1.6;font-weight:300}
+
+.slist{display:flex;flex-direction:column;gap:9px}
+.sc{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:13px 15px;display:flex;gap:13px;align-items:flex-start;opacity:0;transform:translateY(8px);transition:all 0.4s ease;box-shadow:0 1px 4px rgba(0,0,0,0.03)}
+.sc.on{opacity:1;transform:translateY(0)}
+.sc:hover{border-color:var(--gold-l);box-shadow:0 2px 12px rgba(196,147,63,0.09)}
+.sbar{width:3px;border-radius:10px;flex-shrink:0;align-self:stretch;min-height:28px}
+.sk .sbar{background:#d4775a}.sn .sbar{background:var(--gold)}.sw .sbar{background:var(--sage)}
+.sbody{flex:1}
+.slabel{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.sk .slabel{color:#d4775a}.sn .slabel{color:var(--gold)}.sw .slabel{color:var(--sage)}
+.stext{font-size:14px;font-weight:500;color:var(--dark);line-height:1.4}
+
+.pcicard{background:#fff8f6;border:1px solid rgba(212,119,90,0.28);border-radius:12px;padding:20px;text-align:center;display:none;flex-direction:column;align-items:center;gap:5px}
+.pcicard.on{display:flex}
+.pcicard-i{font-size:26px}
+.pcicard-t{font-family:'DM Serif Display',serif;font-size:17px;color:#c0522e}
+.pcicard-s{font-size:12px;color:#c0522e;opacity:0.65;font-weight:300;letter-spacing:0.5px}
+
+.fpills{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+.fp{background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Even Realities G2 &middot; SalesEye</div>
+  <div class="htitle">Your coach.<br><em>Always present.</em></div>
+  <div class="hsub">Real-time AI suggestions appear in your lens the moment an objection is detected &mdash; invisible to everyone but you.</div>
+  <div class="live"><div class="ldot"></div> Live on every call</div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="go('price',this)">Price Objection</button>
+  <button class="tab" onclick="go('think',this)">Need to Think</button>
+  <button class="tab" onclick="go('spouse',this)">Talk to Spouse</button>
+  <button class="tab" onclick="go('someone',this)">Already Have Someone</button>
+  <button class="tab" onclick="go('weedman',this)">Competitor</button>
+  <button class="tab" onclick="go('close',this)">Buying Signal</button>
+  <button class="tab" onclick="go('connect',this)">Connection</button>
+  <button class="tab" onclick="go('pci',this)">PCI Pause</button>
+</div>
+
+<div class="content">
+<div class="grid">
+
+  <div class="gcol">
+    <div class="glabel">G2 Lens View</div>
+    <div class="gscene">
+      <div class="gwrap">
+        <svg class="gsvg" viewBox="0 0 520 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 95 C30 92 60 88 92 86" stroke="#2a2218" stroke-width="9" stroke-linecap="round"/>
+          <path d="M512 95 C490 92 460 88 428 86" stroke="#2a2218" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="92" cy="86" r="6" fill="#3d3020" stroke="#2a2218" stroke-width="1.5"/>
+          <circle cx="428" cy="86" r="6" fill="#3d3020" stroke="#2a2218" stroke-width="1.5"/>
+          <rect x="94" y="44" width="148" height="100" rx="16" fill="#181410" stroke="#3d3020" stroke-width="2.5"/>
+          <rect x="98" y="48" width="140" height="92" rx="13" fill="#0d0b08" stroke="#2a2010" stroke-width="1"/>
+          <ellipse cx="138" cy="63" rx="28" ry="9" fill="rgba(255,255,255,0.035)" transform="rotate(-15,138,63)"/>
+          <rect x="278" y="44" width="148" height="100" rx="16" fill="#181410" stroke="#3d3020" stroke-width="2.5"/>
+          <rect x="282" y="48" width="140" height="92" rx="13" fill="#0d0b08" stroke="#2a2010" stroke-width="1"/>
+          <ellipse cx="320" cy="63" rx="28" ry="9" fill="rgba(255,255,255,0.035)" transform="rotate(-15,320,63)"/>
+          <path d="M242 88 C248 78 272 78 278 88" stroke="#2a2218" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <ellipse cx="241" cy="100" rx="5" ry="3" fill="#3d3020"/>
+          <ellipse cx="279" cy="100" rx="5" ry="3" fill="#3d3020"/>
+          <rect x="104" y="55" width="68" height="50" rx="7" fill="rgba(96,200,255,0.05)" stroke="rgba(96,200,255,0.1)" stroke-width="0.5"/>
+        </svg>
+
+        <div class="lovl" id="lovl">
+          <div class="linner" id="linn">
+            <div class="ltag" id="ltag">OBJECTION</div>
+            <div class="lopt a" id="lo1">What were you expecting?</div>
+            <div class="lopt b" id="lo2">Less than $1 a day</div>
+            <div class="lopt c" id="lo3">Worth it for your home?</div>
+          </div>
+          <div class="lpci" id="lpci">
+            <div class="pci-i">&#128274;</div>
+            <div class="pci-t">Mic paused<br>PCI mode</div>
+          </div>
+        </div>
+        <div class="lglow" id="lglow"></div>
+      </div>
+    </div>
+    <div class="wnote">
+      <div class="wi">&#128083;</div>
+      <div>Suggestions appear <strong>only in your lens</strong> &mdash; your prospect sees nothing. You stay fully present.</div>
+    </div>
+  </div>
+
+  <div class="rcol">
+    <div class="shdr on" id="shdr">
+      <div class="seyebrow" id="seb">Objection Detected</div>
+      <div class="stitle" id="sti">Price is too high</div>
+      <div class="sdesc" id="sde">Prospect signals the investment feels too large. SalesEye surfaces three responses tuned to where they are emotionally.</div>
+    </div>
+
+    <div class="slist" id="slist">
+      <div class="sc sk" id="sc1"><div class="sbar"></div><div class="sbody"><div class="slabel">Skeptical</div><div class="stext" id="st1">What were you expecting to invest?</div></div></div>
+      <div class="sc sn" id="sc2"><div class="sbar"></div><div class="sbody"><div class="slabel">Neutral</div><div class="stext" id="st2">Less than a dollar a day for a great lawn</div></div></div>
+      <div class="sc sw" id="sc3"><div class="sbar"></div><div class="sbody"><div class="slabel">Warm</div><div class="stext" id="st3">What would a perfect lawn be worth to you?</div></div></div>
+    </div>
+
+    <div class="pcicard" id="pcicard">
+      <div class="pcicard-i">&#128274;</div>
+      <div class="pcicard-t">Microphone Suspended</div>
+      <div class="pcicard-s">Payment info detected &mdash; SalesEye is not recording.</div>
+      <div class="pcicard-s">Mic resumes automatically in 60 seconds.</div>
+    </div>
+
+    <div class="fpills">
+      <div class="fp">&#10003; Real-time STT</div>
+      <div class="fp">&#10003; Claude AI</div>
+      <div class="fp">&#10003; PCI compliant</div>
+      <div class="fp">&#10003; Any industry</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const D={
+  price:{eb:"Objection Detected",ti:"Price is too high",de:"Prospect signals the investment feels too large. SalesEye surfaces three responses tuned to where they are emotionally.",tag:"PRICE",l1:"What were you expecting?",l2:"Less than $1 a day",l3:"Worth it for your home?",s1:"What were you expecting to invest?",s2:"Less than a dollar a day for a great lawn",s3:"What would a perfect lawn be worth to you?",pci:false},
+  think:{eb:"Stall Detected",ti:"Need to think about it",de:"A stall often hides the real objection. SalesEye prompts you to uncover what is really holding them back.",tag:"STALL",l1:"What concern remains?",l2:"Price or something else?",l3:"What would help decide?",s1:"What specifically would help you decide?",s2:"Is it the price or something else?",s3:"What would help you feel confident today?",pci:false},
+  spouse:{eb:"Decision Maker",ti:"Need to talk to spouse",de:"A third party is involved. SalesEye helps you keep momentum and prepare for the next conversation.",tag:"SPOUSE",l1:"What concerns will they have?",l2:"Their main question?",l3:"Would they love it too?",s1:"What concerns do you think they will have?",s2:"What do you think their main question will be?",s3:"Would they love having a great lawn too?",pci:false},
+  someone:{eb:"Competitor Present",ti:"Already have someone",de:"They are with another provider. SalesEye uses curiosity questions to let them surface the gap themselves.",tag:"COMPETITOR",l1:"How long used them?",l2:"Getting hoped-for results?",l3:"What do you love most?",s1:"How long have you used them?",s2:"Are you getting the results you hoped for?",s3:"What do you love most about working with them?",pci:false},
+  weedman:{eb:"Competitor Named",ti:"They mention a competitor",de:"SalesEye guides you to stay curious rather than defensive — letting the prospect surface the gap themselves.",tag:"COMPETITOR",l1:"What do you like most?",l2:"Results vs expectations?",l3:"Guarantee + licensed team",s1:"What do you like most about what they do?",s2:"How do their results compare to what you wanted?",s3:"Our guarantee means free return visits",pci:false},
+  close:{eb:"Buying Signal",ti:"They are ready to move",de:"Prospect is asking about price, timing, or next steps. SalesEye tells you to advance and reminds you to stay silent after you ask.",tag:"CLOSE",l1:"Does guarantee help?",l2:"Does that work for you?",l3:"Ready to get started?",s1:"Does the guarantee give you enough confidence?",s2:"Does that sound like it would work for you?",s3:"Ready to get your lawn looking amazing?",pci:false},
+  connect:{eb:"Stage 1 \u2014 Connection",ti:"Opening the call",de:"The first 60 seconds set the tone. SalesEye coaches you to lead with curiosity, not a pitch.",tag:"CONNECT",l1:"What made you take call?",l2:"How is lawn this season?",l3:"Tell me your lawn goals",s1:"What would make this call worth your time?",s2:"How is your lawn looking this time of year?",s3:"Tell me about your lawn \u2014 what are your goals?",pci:false},
+  pci:{eb:"Compliance",ti:"Payment detected",de:"SalesEye instantly suspends the microphone when payment language is detected, keeping you PCI compliant.",tag:"PCI",l1:"",l2:"",l3:"",s1:"",s2:"",s3:"",pci:true}
+};
+
+function go(k,btn){
+  const d=D[k];
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  const li=document.getElementById('linn');
+  const lp=document.getElementById('lpci');
+  const lg=document.getElementById('lglow');
+  const hdr=document.getElementById('shdr');
+  ['sc1','sc2','sc3'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  hdr.classList.remove('on');
+  li.classList.remove('on');
+  lp.classList.remove('on');
+  setTimeout(()=>{
+    if(d.pci){
+      lp.classList.add('on');
+      lg.className='lglow pci on';
+    } else {
+      document.getElementById('ltag').textContent=d.tag;
+      document.getElementById('lo1').textContent=d.l1;
+      document.getElementById('lo2').textContent=d.l2;
+      document.getElementById('lo3').textContent=d.l3;
+      li.classList.add('on');
+      lg.className='lglow on';
+    }
+    document.getElementById('seb').textContent=d.eb;
+    document.getElementById('sti').textContent=d.ti;
+    document.getElementById('sde').textContent=d.de;
+    hdr.classList.add('on');
+    const pc=document.getElementById('pcicard');
+    const sl=document.getElementById('slist');
+    if(d.pci){sl.style.display='none';pc.classList.add('on');}
+    else{
+      sl.style.display='flex';pc.classList.remove('on');
+      document.getElementById('st1').textContent=d.s1;
+      document.getElementById('st2').textContent=d.s2;
+      document.getElementById('st3').textContent=d.s3;
+      setTimeout(()=>{
+        document.getElementById('sc1').classList.add('on');
+        setTimeout(()=>document.getElementById('sc2').classList.add('on'),80);
+        setTimeout(()=>document.getElementById('sc3').classList.add('on'),160);
+      },100);
+    }
+  },280);
+}
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('linn').classList.add('on');
+    document.getElementById('lglow').classList.add('on');
+    document.getElementById('shdr').classList.add('on');
+    document.getElementById('sc1').classList.add('on');
+    setTimeout(()=>document.getElementById('sc2').classList.add('on'),80);
+    setTimeout(()=>document.getElementById('sc3').classList.add('on'),160);
+  },900);
+});
+</script>
+</body>
+</html>
